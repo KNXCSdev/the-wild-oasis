@@ -38,14 +38,10 @@ function UpdateUserDataForm() {
         />
       </FormRow>
       <FormRow label="Avatar image">
-        <FileInput
-          id="avatar"
-          accept="image/*"
-          onChange={(e) => setAvatar(e.target.files[0])}
-        />
+        <FileInput id="avatar" accept="image/*" onChange={(e) => setAvatar(e.target.files[0])} />
       </FormRow>
       <FormRow>
-        <Button type="reset" variation="secondary">
+        <Button type="reset" $variation="secondary">
           Cancel
         </Button>
         <Button>Update account</Button>
