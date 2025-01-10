@@ -11,6 +11,8 @@ import ButtonText from "../../ui/ButtonText";
 import { useBooking } from "./useBooking";
 import Spinner from "../../ui/Spinner";
 import { useNavigate } from "react-router";
+import { useCheckOut } from "../check-in-out/useCheckOut";
+import { HiArrowUpOnSquare } from "react-icons/hi2";
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -20,6 +22,7 @@ const HeadingGroup = styled.div`
 
 function BookingDetail() {
   const { booking, isLoading } = useBooking();
+  const { checkout, isCheckingOut } = useCheckOut();
   const navigate = useNavigate();
 
   if (isLoading) return <Spinner />;
@@ -47,6 +50,17 @@ function BookingDetail() {
       <ButtonGroup>
         {status === "unconfirmed" && (
           <Button onClick={() => navigate(`/checkin/${bookingId}`)}>Check in</Button>
+        )}
+
+        {status === "checked-in" && (
+          <Button
+            onClick={() => {
+              checkout(bookingId);
+              navigate("/bookings?status=checked-in&page=1");
+            }}
+          >
+            Check out
+          </Button>
         )}
         <Button $variation="secondary" onClick={() => navigate(-1)}>
           Back
