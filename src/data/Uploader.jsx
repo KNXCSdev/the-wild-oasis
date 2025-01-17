@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { isFuture, isPast, isToday } from "date-fns";
 import supabase from "../services/supabase";
 import Button from "../ui/Button";
@@ -7,7 +7,6 @@ import { subtractDates } from "../utils/helpers";
 import { bookings } from "./data-bookings";
 import { cabins } from "./data-cabins";
 import { guests } from "./data-guests";
-import { useQueryClient } from "@tanstack/react-query";
 
 // const originalSettings = {
 //   minBookingLength: 3,
@@ -88,33 +87,28 @@ async function createBookings() {
 
 function Uploader() {
   const [isLoading, setIsLoading] = useState(false);
-  const queryClient = useQueryClient();
 
-  const uploadAll = useCallback(async () => {
+  async function uploadAll() {
     setIsLoading(true);
+    // Bookings need to be deleted FIRST
     await deleteBookings();
     await deleteGuests();
     await deleteCabins();
 
+    // Bookings need to be created LAST
     await createGuests();
     await createCabins();
     await createBookings();
 
-    queryClient.invalidateQueries("bookings");
-    queryClient.invalidateQueries("guests");
-    queryClient.invalidateQueries("cabins");
-
     setIsLoading(false);
-  }, [queryClient]);
+  }
 
-  const uploadBookings = useCallback(async () => {
+  async function uploadBookings() {
     setIsLoading(true);
     await deleteBookings();
     await createBookings();
-
-    queryClient.invalidateQueries("bookings");
     setIsLoading(false);
-  }, [queryClient]);
+  }
 
   useEffect(() => {
     const ONE_DAY = 24 * 60 * 60 * 1000; // One day
@@ -125,7 +119,7 @@ function Uploader() {
         localStorage.setItem("lastUpload", Date.now());
       });
     }
-  }, [uploadAll]);
+  }, []);
 
   return (
     <div
