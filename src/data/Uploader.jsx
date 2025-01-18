@@ -121,26 +121,31 @@ function Uploader() {
     const lastRun = localStorage.getItem("lastUpload");
 
     if (!lastRun || Date.now() - parseInt(lastRun, 10) > ONE_DAY) {
-      uploadAll().then(() => {
-        localStorage.setItem("lastUpload", Date.now());
-      });
+      if (!window.isUploadRunning) {
+        window.isUploadRunning = true;
+        uploadAll().then(() => {
+          localStorage.setItem("lastUpload", Date.now());
+          window.isUploadRunning = false;
+        });
+      }
     }
   }, [uploadAll]);
 
   return (
     <div
-      style={{
-        marginTop: "auto",
-        backgroundColor: "#1a1b1b",
-        padding: "8px",
-        borderRadius: "5px",
-        textAlign: "center",
-        display: "flex",
-        flexDirection: "column",
-        gap: "8px",
-      }}
+    // style={{
+    //   marginTop: "auto",
+    //   backgroundColor: "#1a1b1b",
+    //   padding: "8px",
+    //   borderRadius: "5px",
+    //   textAlign: "center",
+    //   display: "flex",
+    //   flexDirection: "column",
+    //   gap: "8px",
+    // }}
     >
-      <h3>SAMPLE DATA</h3>
+      &nbsp;
+      {/* <h3>SAMPLE DATA</h3>
 
       <Button onClick={uploadAll} disabled={isLoading}>
         Upload ALL
@@ -148,7 +153,7 @@ function Uploader() {
 
       <Button onClick={uploadBookings} disabled={isLoading}>
         Upload bookings ONLY
-      </Button>
+      </Button> */}
     </div>
   );
 }
